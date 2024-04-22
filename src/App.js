@@ -3,19 +3,19 @@
 import * as THREE from 'three'
 import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Image, Environment, ScrollControls, useScroll, useTexture } from '@react-three/drei'
+import { Image, Environment, ScrollControls, useScroll, useTexture, OrbitControls } from '@react-three/drei'
 import { easing } from 'maath'
 import './util'
+import { Roulette } from './Roulette'
 
 export const App = () => (
-  <Canvas camera={{ position: [0, 0, 100], fov: 15 }}>
-    <fog attach="fog" args={['#a79', 8.5, 12]} />
+  <Canvas camera={{ position: [0, 0, 400], fov: 15 }}>
+          <hemisphereLight />
     <ScrollControls pages={4} infinite>
-      <Rig rotation={[0, 0, 0.15]}>
+      <Rig rotation={[0, 0, 0]}>
         <Carousel />
       </Rig>
     </ScrollControls>
-    <Environment preset="dawn" background blur={0.5} />
   </Canvas>
 )
 
@@ -47,12 +47,8 @@ function Card({ url, ...props }) {
   const [hovered, hover] = useState(false)
   const pointerOver = (e) => (e.stopPropagation(), hover(true))
   const pointerOut = () => hover(false)
-  useFrame((state, delta) => {
-    easing.damp3(ref.current.scale, hovered ? 1.15 : 1, 0.1, delta)
-    easing.damp(ref.current.material, 'radius', hovered ? 0.25 : 0.1, 0.2, delta)
-    easing.damp(ref.current.material, 'zoom', hovered ? 1 : 1.5, 0.2, delta)
-  })
-  return <Image ref={ref} url={url} transparent side={THREE.DoubleSide} onPointerOver={pointerOver} onPointerOut={pointerOut} {...props} />
+
+  return <Roulette ref={ref} url={url} transparent side={THREE.DoubleSide} onPointerOver={pointerOver} onPointerOut={pointerOut} {...props} />
 }
 
 function Banner(props) {
